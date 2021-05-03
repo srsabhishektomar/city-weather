@@ -1,0 +1,59 @@
+<?php
+/**
+ * Implements hook_entity_presave().
+ */
+function city_weather_entity_presave(Drupal\Core\Entity\EntityInterface $entity) {
+    if ($entity->bundle() == 'city_weather') {
+        $title = $entity->get('title')->value;
+        try {
+            $uri = "api.openweathermap.org/data/2.5/weather?q=$title&appid=af80fb5c555abbc80661672be3e1bd42";
+            $response = \Drupal::httpClient()->get($uri, array('headers' => array('Accept' => 'text/json')));
+            $data = $response->getBody();
+            if (empty($data)) {
+                return FALSE;
+            }
+            $data = json_decode($data);
+            //dump($data->weather[0]); die;
+            $id = $data->weather[0]->id;
+            $main = $data->weather[0]->main;
+            $desc = $data->weather[0]->description;
+            $icon = $data->weather[0]->icon;
+            $table = "<table>";
+            $table .= "<tr>";
+            $table .= "<td>Id</td> <td>$id</td>";
+            $table .= "</tr>";
+            $table .= "<tr>";
+            $table .= "<td>Main</td> <td>$main</td>";
+            $table .= "</tr>";
+            $table .= "<tr>";
+            $table .= "<td>Description</td> <td>$desc</td>";
+            $table .= "</tr>";
+            $table .= "<tr>";
+            $table .= "<td>Icon</td> <td>$icon</td>";
+            $table .= "</tr>";
+            $table .= "</table>";
+            $entity->set('body',  array(
+                'summary' => "Teaser",
+                'value' => $table,
+                'format' => 'full_html',
+                ));
+          }
+          catch (RequestException $e) {
+            return FALSE;
+        }
+
+    }
+}
+
+/**
+ * hook_theme_implement
+ */
+function city_weather_theme($existing, $type, $theme, $path) {
+    return array('city_weather_list' =>
+             array(
+              'variables' => array(
+                  'rec' => null,
+              ),
+          )
+      );
+  }

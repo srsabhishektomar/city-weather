@@ -1,0 +1,6 @@
+<ul>
+    {% for node in rec %}
+        <li>{{ node.title.0.value }}</li>
+        <li>{{ node.body.0.value|raw }}</li>
+    {% endfor %}
+</ul>

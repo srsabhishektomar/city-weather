@@ -1,0 +1,7 @@
+name: City Weather
+type: module
+description: 'add and update city weather'
+core: 8.x
+core_version_requirement: ^8 || ^9
+dependencies:
+  - node

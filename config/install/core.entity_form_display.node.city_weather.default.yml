@@ -1,0 +1,23 @@
+langcode: en
+status: true
+dependencies:
+    config:
+        - field.field.node.city_weather.body
+        - node.type.city_weather
+    module:
+        - text
+        - user
+id: node.city_weather.default
+targetEntityType: node
+bundle: city_weather
+mode: default
+content:
+    body:
+        label: hidden
+        type: text_textarea_with_summary
+        weight: 101
+        settings: {  }
+        third_party_settings: {  }
+    links:
+        weight: 100
+hidden: {  }
